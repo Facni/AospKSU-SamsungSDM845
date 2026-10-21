@@ -79,10 +79,11 @@ jobs:
           export CLANG_TRIPLE=aarch64-linux-gnu-
           export CROSS_COMPILE=aarch64-linux-gnu-
           export CROSS_COMPILE_ARM32=arm-linux-gnueabi-
+          export CC_ARM32=arm-linux-gnueabi-gcc
 
           rm -rf out && mkdir -p out
-          make O=out CC="ccache clang" sdm845_defconfig starqlte_chn.config
-          make -j"$(nproc --all)" O=out CC="ccache clang" Image.gz-dtb
+          make O=out CC="ccache clang" CC_ARM32="arm-linux-gnueabi-gcc" sdm845_defconfig starqlte_chn.config
+          make -j"$(nproc --all)" O=out CC="ccache clang" CC_ARM32="arm-linux-gnueabi-gcc" Image.gz-dtb
 
           cp out/arch/arm64/boot/Image.gz-dtb ../AnyKernel3/Image.gz-dtb
 
@@ -100,10 +101,11 @@ jobs:
           export CLANG_TRIPLE=aarch64-linux-gnu-
           export CROSS_COMPILE=aarch64-linux-gnu-
           export CROSS_COMPILE_ARM32=arm-linux-gnueabi-
+          export CC_ARM32=arm-linux-gnueabi-gcc
 
           rm -rf out && mkdir -p out
-          make O=out CC="ccache clang" sdm845_defconfig star2qlte_chn.config
-          make -j"$(nproc --all)" O=out CC="ccache clang" Image.gz-dtb
+          make O=out CC="ccache clang" CC_ARM32="arm-linux-gnueabi-gcc" sdm845_defconfig star2qlte_chn.config
+          make -j"$(nproc --all)" O=out CC="ccache clang" CC_ARM32="arm-linux-gnueabi-gcc" Image.gz-dtb
 
           cp out/arch/arm64/boot/Image.gz-dtb ../AnyKernel3/Image.gz-dtb
 
@@ -121,10 +123,11 @@ jobs:
           export CLANG_TRIPLE=aarch64-linux-gnu-
           export CROSS_COMPILE=aarch64-linux-gnu-
           export CROSS_COMPILE_ARM32=arm-linux-gnueabi-
+          export CC_ARM32=arm-linux-gnueabi-gcc
 
           rm -rf out && mkdir -p out
-          make O=out CC="ccache clang" sdm845_defconfig crownqlte_chn.config
-          make -j"$(nproc --all)" O=out CC="ccache clang" Image.gz-dtb
+          make O=out CC="ccache clang" CC_ARM32="arm-linux-gnueabi-gcc" sdm845_defconfig crownqlte_chn.config
+          make -j"$(nproc --all)" O=out CC="ccache clang" CC_ARM32="arm-linux-gnueabi-gcc" Image.gz-dtb
 
           cp out/arch/arm64/boot/Image.gz-dtb ../AnyKernel3/Image.gz-dtb
 
@@ -142,20 +145,21 @@ jobs:
           export CLANG_TRIPLE=aarch64-linux-gnu-
           export CROSS_COMPILE=aarch64-linux-gnu-
           export CROSS_COMPILE_ARM32=arm-linux-gnueabi-
+          export CC_ARM32=arm-linux-gnueabi-gcc
 
           rm -rf out && mkdir -p out
-          make O=out CC="ccache clang" sdm845_defconfig starqlte_chn.config
-          make -j"$(nproc --all)" O=out CC="ccache clang" Image.gz-dtb
+          make O=out CC="ccache clang" CC_ARM32="arm-linux-gnueabi-gcc" sdm845_defconfig starqlte_chn.config
+          make -j"$(nproc --all)" O=out CC="ccache clang" CC_ARM32="arm-linux-gnueabi-gcc" Image.gz-dtb
           cp out/arch/arm64/boot/Image.gz-dtb ../AnyKernel3/Image.gz-dtb-starqltechn
 
           rm -rf out && mkdir -p out
-          make O=out CC="ccache clang" sdm845_defconfig star2qlte_chn.config
-          make -j"$(nproc --all)" O=out CC="ccache clang" Image.gz-dtb
+          make O=out CC="ccache clang" CC_ARM32="arm-linux-gnueabi-gcc" sdm845_defconfig star2qlte_chn.config
+          make -j"$(nproc --all)" O=out CC="ccache clang" CC_ARM32="arm-linux-gnueabi-gcc" Image.gz-dtb
           cp out/arch/arm64/boot/Image.gz-dtb ../AnyKernel3/Image.gz-dtb-star2qltechn
 
           rm -rf out && mkdir -p out
-          make O=out CC="ccache clang" sdm845_defconfig crownqlte_chn.config
-          make -j"$(nproc --all)" O=out CC="ccache clang" Image.gz-dtb
+          make O=out CC="ccache clang" CC_ARM32="arm-linux-gnueabi-gcc" sdm845_defconfig crownqlte_chn.config
+          make -j"$(nproc --all)" O=out CC="ccache clang" CC_ARM32="arm-linux-gnueabi-gcc" Image.gz-dtb
           cp out/arch/arm64/boot/Image.gz-dtb ../AnyKernel3/Image.gz-dtb-crownqltechn
 
           cd ../AnyKernel3

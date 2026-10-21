@@ -17,6 +17,7 @@ export SUBARCH=arm64
 export CLANG_TRIPLE=aarch64-linux-gnu-
 export CROSS_COMPILE=aarch64-linux-gnu-
 export CROSS_COMPILE_ARM32=arm-linux-gnueabi-
+export CC_ARM32=arm-linux-gnueabi-gcc
 
 if [ ! -d "kernel" ]; then
     git clone -b "$KERNEL_BRANCH" "$KERNEL_REPO" --depth=1 kernel
@@ -34,8 +35,8 @@ build_device() {
     local dev="$1"
     local cfg="$2"
     rm -rf out && mkdir -p out
-    make O=out CC="clang" sdm845_defconfig "$cfg"
-    make -j"$(nproc --all)" O=out CC="clang" Image.gz-dtb
+    make O=out CC="clang" CC_ARM32="arm-linux-gnueabi-gcc" sdm845_defconfig "$cfg"
+    make -j"$(nproc --all)" O=out CC="clang" CC_ARM32="arm-linux-gnueabi-gcc" Image.gz-dtb
     cp out/arch/arm64/boot/Image.gz-dtb "../AnyKernel3/Image.gz-dtb-$dev"
     cp out/arch/arm64/boot/Image.gz-dtb "../AnyKernel3/Image.gz-dtb"
     (
