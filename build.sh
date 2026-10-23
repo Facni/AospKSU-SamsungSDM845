@@ -5,6 +5,7 @@ TARGET="${1:-all}"
 KERNEL_REPO="https://gitlab.com/samsung-sdm845/android_kernel_samsung_sdm845.git"
 KERNEL_BRANCH="lineage-22.2"
 CLANG_DIR="$HOME/toolchains/clang-r487747c"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 if [ ! -f "$CLANG_DIR/bin/clang" ]; then
     mkdir -p "$CLANG_DIR"
@@ -24,10 +25,27 @@ if [ ! -d "kernel" ]; then
 fi
 
 cd kernel
+
+# Setup KernelSU (sKernelSU)
 curl -LSs "https://raw.githubusercontent.com/doubledashdot/sKernelSU/master/kernel/setup.sh" | bash -s master
+
+# Setup Droidspaces patches & configuration
+if [ -d "$SCRIPT_DIR/patches" ]; then
+    for p in "$SCRIPT_DIR"/patches/*.patch; do
+        if [ -f "$p" ]; then
+            echo "Applying patch: $(basename "$p")"
+            patch -p1 -N --silent < "$p" || true
+        fi
+    done
+fi
 
 sed -i 's/CONFIG_LOCALVERSION=.*/CONFIG_LOCALVERSION="-AospKSU"/' arch/arm64/configs/sdm845_defconfig
 echo 'CONFIG_LOCALVERSION="-AospKSU"' >> arch/arm64/configs/sdm845_defconfig
+
+if [ -f "$SCRIPT_DIR/configs/droidspaces.config" ]; then
+    echo "Appending Droidspaces configuration..."
+    cat "$SCRIPT_DIR/configs/droidspaces.config" >> arch/arm64/configs/sdm845_defconfig
+fi
 
 mkdir -p ../output
 
@@ -36,6 +54,7 @@ build_device() {
     local cfg="$2"
     rm -rf out && mkdir -p out
     make O=out CC="clang" CC_ARM32="arm-linux-gnueabi-gcc" sdm845_defconfig "$cfg"
+    make O=out CC="clang" CC_ARM32="arm-linux-gnueabi-gcc" olddefconfig
     make -j"$(nproc --all)" O=out CC="clang" CC_ARM32="arm-linux-gnueabi-gcc" Image.gz-dtb
     cp out/arch/arm64/boot/Image.gz-dtb "../AnyKernel3/Image.gz-dtb"
     (

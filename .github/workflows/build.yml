@@ -64,6 +64,17 @@ jobs:
         run: |
           curl -LSs "https://raw.githubusercontent.com/doubledashdot/sKernelSU/master/kernel/setup.sh" | bash -s master
 
+      - name: Setup Droidspaces
+        working-directory: kernel
+        run: |
+          for p in ../patches/*.patch; do
+            if [ -f "$p" ]; then
+              echo "Applying patch: $(basename "$p")"
+              patch -p1 -N --silent < "$p" || true
+            fi
+          done
+          cat ../configs/droidspaces.config >> arch/arm64/configs/sdm845_defconfig
+
       - name: Configure LOCALVERSION
         working-directory: kernel
         run: |
@@ -86,6 +97,7 @@ jobs:
 
           rm -rf out && mkdir -p out
           make O=out CC="ccache clang" CC_ARM32="arm-linux-gnueabi-gcc" sdm845_defconfig starqlte_chn.config
+          make O=out CC="ccache clang" CC_ARM32="arm-linux-gnueabi-gcc" olddefconfig
           make -j"$(nproc --all)" O=out CC="ccache clang" CC_ARM32="arm-linux-gnueabi-gcc" Image.gz-dtb
 
           cp out/arch/arm64/boot/Image.gz-dtb ../AnyKernel3/Image.gz-dtb
@@ -108,6 +120,7 @@ jobs:
 
           rm -rf out && mkdir -p out
           make O=out CC="ccache clang" CC_ARM32="arm-linux-gnueabi-gcc" sdm845_defconfig star2qlte_chn.config
+          make O=out CC="ccache clang" CC_ARM32="arm-linux-gnueabi-gcc" olddefconfig
           make -j"$(nproc --all)" O=out CC="ccache clang" CC_ARM32="arm-linux-gnueabi-gcc" Image.gz-dtb
 
           cp out/arch/arm64/boot/Image.gz-dtb ../AnyKernel3/Image.gz-dtb
@@ -130,6 +143,7 @@ jobs:
 
           rm -rf out && mkdir -p out
           make O=out CC="ccache clang" CC_ARM32="arm-linux-gnueabi-gcc" sdm845_defconfig crownqlte_chn.config
+          make O=out CC="ccache clang" CC_ARM32="arm-linux-gnueabi-gcc" olddefconfig
           make -j"$(nproc --all)" O=out CC="ccache clang" CC_ARM32="arm-linux-gnueabi-gcc" Image.gz-dtb
 
           cp out/arch/arm64/boot/Image.gz-dtb ../AnyKernel3/Image.gz-dtb
@@ -143,12 +157,13 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v4.9.337-AospKSU-${{ github.run_number }}
-          name: AospKSU 4.9.337 - Run ${{ github.run_number }}
+          name: AospKSU 4.9.337 (KernelSU + Droidspaces) - Run ${{ github.run_number }}
           body: |
             AospKSU Kernel 4.9.337
             - Branch: lineage-22.2
             - KernelSU (sKernelSU)
-            - Devices: starqltechn, star2qltechn, crownqltechn
+            - Droidspaces / LXC / Docker container support fully enabled
+            - Devices: starqltechn (S9), star2qltechn (S9+), crownqltechn (Note 9)
           files: output/*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

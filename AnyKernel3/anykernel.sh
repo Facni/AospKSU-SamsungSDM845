@@ -2,7 +2,7 @@
 ## osm0sis @ xda-developers
 
 properties() { '
-kernel.string=AospKSU Kernel 4.9.337
+kernel.string=AospKSU Kernel 4.9.337 (KernelSU + Droidspaces)
 do.devicecheck=1
 do.modules=0
 do.systemless=1
